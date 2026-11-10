@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welly — less busywork, more room to create</title>
+<meta name="description" content="Keep signed deals, deliverables, expected payments and tax estimates connected. Join the waitlist for early access.">
+
+<link rel="icon" type="image/svg+xml" href="./assets/img/welly-mark.svg">
+<link rel="stylesheet" href="./css/tokens.css">
+<link rel="stylesheet" href="./css/base.css">
+<link rel="stylesheet" href="./css/sections.css">
+</head>
+<body>
+
+<a class="sr" href="#main">Skip to content</a>
+
+<header class="site-header" id="site-header">
+  <div class="wrap site-header__inner">
+
+    <a class="brand" href="#top" aria-label="Welly — home">
+      <img class="brand__mark" src="./assets/img/welly-mark.svg" alt="" width="28" height="28">
+    </a>
+
+    <a class="btn" href="#join">
+      Get early access
+      <svg class="btn__arrow" width="15" height="15" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14m-6-6 6 6-6 6"/>
+      </svg>
+    </a>
+
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" id="top">
+    <!-- Two instances of the brand blob: a circle filled with the brand
+         gradient and blurred. Built from the token rather than the exported
+         SVG, whose filter region cropped its own falloff when scaled up. -->
+    <div class="hero__blob hero__blob--a" aria-hidden="true"></div>
+    <div class="hero__blob hero__blob--b" aria-hidden="true"></div>
+
+    <div class="wrap grid hero__inner">
+      <p class="hero__eyebrow" data-reveal>Launching 2026</p>
+
+      <h1 class="hero__title" data-reveal>
+        Less busywork.<br>
+        More room to <span class="is-blue">create.</span>
+      </h1>
+
+      <p class="hero__lead" data-reveal>
+        Keep signed deals, deliverables, expected payments, and tax estimates
+        connected&mdash;so you can see what&rsquo;s committed, what&rsquo;s been paid,
+        and what to plan for.
+      </p>
+
+      <form class="join" id="join" novalidate data-reveal>
+        <label class="sr" for="join-email">Email address</label>
+        <input class="join__field" id="join-email" name="email" type="email"
+               inputmode="email" autocomplete="email" placeholder="your@example.com" required>
+        <span class="hp" aria-hidden="true">
+          <label>Company<input name="company" type="text" tabindex="-1" autocomplete="off"></label>
+        </span>
+        <button class="btn btn--lg" type="submit">
+          Get early access
+          <svg class="btn__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14m-6-6 6 6-6 6"/>
+          </svg>
+        </button>
+      </form>
+
+      <p class="join__msg" id="join-msg" role="status" aria-live="polite" hidden></p>
+    </div>
+  </section>
+
+  <section class="strip" aria-label="Life behind the work">
+    <!-- The set is rendered twice. The track scrolls exactly one set
+         width, so the loop is seamless; the copy is hidden from AT. -->
+    <div class="strip__track">
+      <figure class="strip__item"><img src="./assets/img/strip-1-ceramics.png" alt="Hands finishing a ceramic bowl at a workbench" width="288" height="384" loading="eager" decoding="async"></figure><figure class="strip__item"><img src="./assets/img/strip-2-phone.png" alt="A creator checking her phone" width="288" height="384" loading="eager" decoding="async"></figure><figure class="strip__item"><img src="./assets/img/strip-3-welly.png" alt="Welly" width="288" height="384" loading="eager" decoding="async"></figure><figure class="strip__item"><img src="./assets/img/strip-4-packing.png" alt="Packing an order by hand" width="288" height="384" loading="eager" decoding="async"></figure><figure class="strip__item"><img src="./assets/img/strip-5-moodboard.png" alt="A moodboard of prints and colour swatches" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item"><img src="./assets/img/strip-6-selfie.png" alt="A creator filming herself outdoors" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item"><img src="./assets/img/strip-7-studio.png" alt="A photographer reviewing shots in a studio" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item"><img src="./assets/img/strip-8-product.png" alt="A product being photographed under a softbox" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item" aria-hidden="true"><img src="./assets/img/strip-1-ceramics.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item" aria-hidden="true"><img src="./assets/img/strip-2-phone.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item" aria-hidden="true"><img src="./assets/img/strip-3-welly.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item" aria-hidden="true"><img src="./assets/img/strip-4-packing.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item" aria-hidden="true"><img src="./assets/img/strip-5-moodboard.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item" aria-hidden="true"><img src="./assets/img/strip-6-selfie.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item" aria-hidden="true"><img src="./assets/img/strip-7-studio.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure><figure class="strip__item" aria-hidden="true"><img src="./assets/img/strip-8-product.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure>
+    </div>
+  </section>
+
+  <section class="truth" aria-labelledby="truth-title">
+    <!-- Light sources on the navy field. Same gradient token, tinted by the
+         ground behind them rather than redeclared. -->
+    <div class="truth__pattern" aria-hidden="true"></div>
+    <div class="truth__glow truth__glow--l" aria-hidden="true"></div>
+    <div class="truth__glow truth__glow--r" aria-hidden="true"></div>
+
+    <div class="wrap grid truth__head">
+      <p class="truth__eyebrow" data-reveal>Behind every <span>brand deal</span></p>
+      <h2 class="truth__title" id="truth-title" data-reveal>
+        Creating is the fun part.<br>Keeping up with the business takes time.
+      </h2>
+    </div>
+
+    <div class="deck" data-deck>
+      <div class="deck__controls" role="group" aria-label="Browse the challenges">
+        <button class="deck__arrow deck__arrow--prev" type="button" data-step="-1" aria-label="Previous"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="deck__dots"><button class="deck__dot" type="button" data-goto="0" aria-label="Show the contract"></button><button class="deck__dot" type="button" data-goto="1" aria-label="Show the deadline"></button><button class="deck__dot" type="button" data-goto="2" aria-label="Show the payment"></button><button class="deck__dot" type="button" data-goto="3" aria-label="Show the follow-up"></button><button class="deck__dot" type="button" data-goto="4" aria-label="Show the taxes"></button></div>
+        <button class="deck__arrow deck__arrow--next" type="button" data-step="1" aria-label="Next"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+
+      <div class="deck__stage" aria-live="polite">
+        <article class="deck__card" data-card="0" aria-roledescription="slide" aria-label="1 of 5"><p class="deck__label">The contract</p><h3 class="deck__q">What did we agree on?</h3><p class="deck__body">Deliverables, usage rights and payment terms are easy to miss in a long agreement.</p></article><article class="deck__card" data-card="1" aria-roledescription="slide" aria-label="2 of 5"><p class="deck__label">The deadline</p><h3 class="deck__q">When is the draft due?</h3><p class="deck__body">Drafts, approvals and posting dates are hard to keep straight.</p></article><article class="deck__card" data-card="2" aria-roledescription="slide" aria-label="3 of 5"><p class="deck__label">The payment</p><h3 class="deck__q">What landed, and what is owed?</h3><p class="deck__body">A signed deal and money received are two different parts of the story.</p></article><article class="deck__card" data-card="3" aria-roledescription="slide" aria-label="4 of 5"><p class="deck__label">The follow-up</p><h3 class="deck__q">What should I chase?</h3><p class="deck__body">Finding the last conversation takes another round of searching.</p></article><article class="deck__card" data-card="4" aria-roledescription="slide" aria-label="5 of 5"><p class="deck__label">The taxes</p><h3 class="deck__q">How much should I set aside?</h3><p class="deck__body">Your best month still owes tax. Guessing is the default.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="four" aria-labelledby="four-title">
+    <!-- The brand mark tiled as a mask, so its colour comes from a token
+         rather than a second, recoloured copy of the asset. -->
+    <div class="four__pattern" aria-hidden="true"></div>
+
+    <img class="four__welly" src="./assets/img/welly-peek.png" alt="" aria-hidden="true"
+         width="288" height="384" loading="lazy" decoding="async">
+
+    <div class="wrap grid four__head">
+      <p class="four__eyebrow" data-reveal>&ndash;Inside <span>Welly</span>&ndash;</p>
+      <h2 class="four__title" id="four-title" data-reveal>Four things, finally connected.</h2>
+    </div>
+
+    <div class="wrap grid four__rail" data-reveal>
+      <article class="tile tile--ink"><p class="tile__label">The contract</p><p class="tile__head">Turn a signed deal <span class="tile__accent">into a plan.</span></p><p class="tile__body">Scan the agreement. Deliverables, usage rights and payment terms come out as something you can work from.</p></article><article class="tile tile--lime"><p class="tile__label">Contract calendar</p><p class="tile__head">Every date, <span class="tile__accent">on one calendar.</span></p></article><article class="tile tile--blue"><p class="tile__label">Payments</p><p class="tile__head">$2,500 received of $5,000</p><p class="tile__body">Expected and received are two different numbers.</p></article><article class="tile tile--paper"><p class="tile__label">Tax reserve</p><p class="tile__head">$700 <span class="tile__accent">set aside.</span></p><p class="tile__body">28% of what you were actually paid &mdash; never from deals that have not landed yet.</p></article>
+    </div>
+  </section>
+
+  <section class="mosaic" aria-labelledby="mosaic-title" data-reveal="group">
+
+    <!-- Full-bleed: a sibling of the margin box, not a child of it, so it
+         spans the section edge to edge without needing 100vw (which would
+         overflow by the scrollbar width). -->
+    <div class="mosaic__scrim" aria-hidden="true"></div>
+
+    <div class="wrap mosaic__inner">
+
+      <!-- Four self-contained columns. Each tile carries its own aspect-ratio,
+           so the column heights fall out of the proportions rather than being
+           pinned — the whole mosaic rescales at any width, and the columns can
+           reflow to 2-up and 1-up without re-deriving a single number.
+
+           PLACEHOLDER PHOTOS: these are the strip images. Drop the real
+           exports in as mosaic-1…8 and swap the src. -->
+      <div class="mosaic__grid">
+
+        <div class="mosaic__col">
+          <figure class="mo mo--a"><img src="./assets/img/strip-7-studio.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure>
+          <figure class="mo mo--b"><img src="./assets/img/strip-1-ceramics.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure>
+        </div>
+
+        <div class="mosaic__col">
+          <figure class="mo mo--c"><img src="./assets/img/strip-5-moodboard.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure>
+          <!-- Welly sits in the gap as a cut-out, with no tile behind him. -->
+          <div class="mo mo--welly mo--welly-head">
+            <img src="./assets/img/welly-peek.png" alt="" aria-hidden="true" width="162" height="326" loading="lazy" decoding="async">
+          </div>
+          <figure class="mo mo--d"><img src="./assets/img/strip-8-product.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure>
+        </div>
+
+        <div class="mosaic__col">
+          <figure class="mo mo--e"><img src="./assets/img/strip-6-selfie.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure>
+          <figure class="mo mo--f"><img src="./assets/img/strip-2-phone.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure>
+        </div>
+
+        <div class="mosaic__col">
+          <figure class="mo mo--g"><img src="./assets/img/strip-4-packing.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure>
+          <figure class="mo mo--h"><img src="./assets/img/strip-2-phone.png" alt="" width="288" height="384" loading="lazy" decoding="async"></figure>
+          <div class="mo mo--welly mo--welly-body">
+            <img src="./assets/img/welly-peek.png" alt="" aria-hidden="true" width="162" height="326" loading="lazy" decoding="async">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Each sentence is a clipping window with the text inside it, so the
+           line can rise out of its own edge rather than just fading. -->
+      <h2 class="mosaic__title" id="mosaic-title">
+        <span class="mosaic__line"><span>More clarity for your business.</span></span>
+        <span class="mosaic__line"><span>More space for your next idea.</span></span>
+      </h2>
+
+    </div>
+  </section>
+
+</main>
+
+<script src="./js/waitlist.js" defer></script>
+<script src="./js/ui.js" defer></script>
+</body>
+</html>
