@@ -1,0 +1,989 @@
+/* ===========================================================================
+   Sections — one block per section, in page order.
+   =========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   Header
+   Minimal by design: mark left, one action right. Research on waitlist pages
+   puts heavy navigation at a 10–15% conversion cost, so there is deliberately
+   nothing here to click except the thing we want clicked.
+   --------------------------------------------------------------------------- */
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:var(--header-h);
+  display:flex;
+  align-items:center;
+  background:color-mix(in srgb, var(--paper) 82%, transparent);
+  backdrop-filter:saturate(1.4) blur(10px);
+  -webkit-backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid transparent;
+  transition:border-color var(--fast) ease, background var(--fast) ease;
+}
+/* A hairline appears only once you've scrolled, so it doesn't box in the hero. */
+.site-header[data-scrolled="true"]{
+  border-bottom-color:var(--line);
+  background:color-mix(in srgb, var(--paper) 94%, transparent);
+}
+
+.site-header__inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  width:100%;
+}
+
+/* Mark only — the accessible name comes from the link's aria-label. */
+.brand{
+  display:inline-flex;
+  align-items:center;
+  color:var(--ink);
+  transition:opacity var(--fast) ease;
+}
+.brand:hover{opacity:.72}
+.brand__mark{width:26px;height:26px}
+
+/* ---------------------------------------------------------------------------
+   Button — the one action style. Lime means "this is the thing to click".
+   --------------------------------------------------------------------------- */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:11px 18px;
+  border-radius:var(--pill);
+  background:var(--accent);
+  color:var(--accent-ink);
+  font-family:var(--font-body);
+  font-weight:700;
+  font-size:var(--step--1);
+  line-height:1;
+  white-space:nowrap;
+  transition:transform var(--fast) var(--ease), box-shadow var(--fast) ease, filter var(--fast) ease;
+}
+.btn:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.04);
+  box-shadow:0 8px 20px color-mix(in srgb, var(--lime) 44%, transparent);
+}
+.btn:active{transform:translateY(0)}
+.btn__arrow{transition:transform var(--fast) var(--ease)}
+.btn:hover .btn__arrow{transform:translateX(3px)}
+
+.btn--lg{padding:15px 24px;font-size:var(--step-0)}
+
+@media (min-width: 720px){
+  .brand__mark{width:28px;height:28px}
+  .btn{padding:12px 20px}
+}
+
+/* ---------------------------------------------------------------------------
+   Hero
+   Cream ground, two instances of the brand blob bleeding in from opposite
+   corners, and one ask. The blob SVG carries its own grain and blur, so it
+   is used as an image rather than rebuilt as a CSS gradient.
+   --------------------------------------------------------------------------- */
+.hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  min-height:clamp(560px, 86vh, 880px);
+  padding-block:clamp(56px, 10vh, 120px);
+  text-align:center;
+}
+
+.hero__blob{
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  width:min(42vw, 400px);
+  aspect-ratio:1;
+  border-radius:50%;
+  /* grain over gradient, softened by a mask instead of filter:blur — a blur
+     would average the noise away */
+  background-image:var(--noise), var(--grad-brand);
+  background-size:160px 160px, 100% 100%;
+  background-blend-mode:overlay, normal;
+  -webkit-mask-image:var(--blob-falloff);
+  mask-image:var(--blob-falloff);
+  filter:blur(14px);
+  will-change:translate;
+  /* Rotation lives in `transform` and the drift in `translate` — they are
+     separate properties, so the animation can never clobber the flip. */
+  transform:rotate(180deg);
+}
+/* Flipped so navy leads the top-right corner and lime the bottom-left. */
+.hero__blob--a{
+  top:clamp(-170px, -11vw, -70px);
+  right:clamp(-150px, -9vw, -50px);
+  opacity:.72;
+  animation:drift-a 26s ease-in-out infinite alternate;
+}
+.hero__blob--b{
+  bottom:clamp(-170px, -11vw, -70px);
+  left:clamp(-160px, -10vw, -60px);
+  opacity:.6;
+  animation:drift-b 32s ease-in-out infinite alternate;
+}
+
+/* They travel inward from opposite corners and meet near the centre, then
+   ease back out. Different durations keep them from moving in lockstep. */
+@keyframes drift-a{
+  from{ translate:0 0;        scale:1; }
+  to  { translate:-26vw 34vh; scale:1.12; }
+}
+@keyframes drift-b{
+  from{ translate:0 0;        scale:1; }
+  to  { translate:28vw -32vh; scale:1.08; }
+}
+@media (prefers-reduced-motion: reduce){
+  .hero__blob--a,.hero__blob--b{animation:none}
+}
+
+/* Content sits on columns 3-10 of the 12, centred, as in the design. Each
+   child declares the same span so they share one measure. */
+.hero__inner{position:relative;row-gap:0}
+.hero__inner > *{grid-column:1 / -1;justify-self:center}
+@media (min-width: 900px){
+  .hero__inner > *{grid-column:3 / span 8}
+}
+
+/* The brand gradient run horizontally through the type. Same four stops as
+   the blob, rotated 90deg. `color` is the fallback for anything without
+   background-clip:text, so the line is never invisible. */
+.hero__eyebrow{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:clamp(17px, 1.45vw, 21px);
+  letter-spacing:-.02em;
+  color:var(--ink);
+  background:var(--grad-eyebrow);
+  -webkit-background-clip:text;
+  background-clip:text;
+}
+@supports (background-clip: text) or (-webkit-background-clip: text){
+  .hero__eyebrow{color:transparent}
+}
+
+.hero__title{
+  margin-top:14px;
+  /* Spec: Inter Bold 72 / 67 / -3.41px. Expressed relative to the font size
+     (67/72 = .93, -3.41/72 = -.047em) so it holds as the clamp scales down. */
+  font-weight:700;
+  font-size:var(--step-4);
+  line-height:.93;
+  letter-spacing:-.047em;
+  color:var(--ink);
+  text-wrap:balance;
+}
+.is-blue{color:var(--blue)}
+
+.hero__lead{
+  max-width:62ch;
+  margin-top:clamp(18px, 2.4vw, 28px);
+  font-size:var(--step-0);
+  line-height:1.62;
+  color:var(--ink-soft);
+  text-wrap:pretty;
+}
+
+/* --- the single ask ------------------------------------------------------ */
+.join{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  width:min(100%, 560px);
+  margin-top:clamp(26px, 3.4vw, 40px);
+  justify-self:center;
+}
+.join__field{
+  width:100%;
+  height:60px;
+  padding-inline:24px;
+  border:1.5px solid var(--lime);
+  border-radius:var(--pill);
+  background:color-mix(in srgb, var(--lime) 18%, var(--paper-2));
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:var(--step-0);
+}
+.join__field::placeholder{color:var(--ink-faint)}
+.join__field:focus-visible{
+  outline:3px solid var(--navy);
+  outline-offset:2px;
+  background:var(--paper-2);
+}
+.join .btn{height:60px;justify-content:center}
+
+.join__msg{
+  width:min(100%, 560px);
+  margin-top:16px;
+  padding:16px 20px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--paper-2);
+  font-size:var(--step--1);
+  line-height:1.55;
+  text-align:left;
+  color:var(--ink);
+}
+.join__msg[data-state="error"]{
+  border-color:color-mix(in srgb, #B42318 40%, transparent);
+  color:#8E2019;
+}
+.join__queue{
+  display:block;
+  font-family:var(--font-display);
+  font-size:var(--step-2);
+  line-height:1;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.join__share{display:flex;gap:8px;margin-top:14px}
+.join__share input{
+  flex:1 1 auto;min-width:0;height:42px;padding-inline:14px;
+  border:1px solid var(--line);border-radius:var(--radius-sm);
+  background:var(--white);color:var(--ink-soft);font-size:12.5px;
+}
+.join__share button{
+  height:42px;padding-inline:16px;border-radius:var(--radius-sm);
+  background:var(--navy);color:var(--white);font-weight:700;font-size:12.5px;
+}
+
+/* From 640px the ask becomes one line, which is the design's resting state. */
+@media (min-width: 640px){
+  .join{flex-direction:row;align-items:center;width:min(100%, 640px)}
+  .join__field{flex:1 1 auto}
+  .join .btn{flex:0 0 auto;padding-inline:28px}
+}
+
+/* ---------------------------------------------------------------------------
+   Photo strip
+   441px tall, full-bleed, scrolling slowly and continuously. The eight cards
+   are rendered twice and the track travels exactly one set width plus one
+   gap, so the loop has no visible seam.
+   --------------------------------------------------------------------------- */
+.strip{
+  display:grid;
+  align-content:center;
+  min-height:441px;          /* per the design spec */
+  overflow:hidden;
+  width:100%;
+}
+
+.strip__track{
+  display:flex;
+  width:max-content;
+  gap:var(--strip-gap);
+  animation:strip-scroll 96s linear infinite;
+  will-change:translate;
+}
+@keyframes strip-scroll{
+  /* one set = half the track, plus the gap that trails it */
+  to{ translate:calc(-50% - (var(--strip-gap) / 2)) 0; }
+}
+/* Stop so a photo can actually be looked at. */
+.strip:hover .strip__track,
+.strip:focus-within .strip__track{animation-play-state:paused}
+
+.strip__item{
+  flex:0 0 auto;
+  margin:0;
+  width:var(--strip-card-w);
+  aspect-ratio:3 / 4;        /* the exports are 288x384 */
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:var(--paper-2);
+}
+.strip__item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+@media (prefers-reduced-motion: reduce){
+  /* Keep every photo reachable rather than freezing on whichever are in frame. */
+  .strip{overflow-x:auto}
+  .strip__track{animation:none}
+}
+
+/* ---------------------------------------------------------------------------
+   Section two — the problem, on a navy field
+   A deck of cards rather than a row: the front card is upright and readable,
+   the next two fan out behind it so the pile reads as "there's more of this".
+   --------------------------------------------------------------------------- */
+.truth{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:var(--navy-night);
+  color:var(--paper);
+  padding-block:clamp(56px, 7vw, 104px) 0;
+}
+/* Glass tiles over the lower half, right-aligned with the card stack.
+   The SVG is a MASK, not a background, so the frosting exists only inside the
+   tile shapes and the glows behind read through them as panes.
+
+   Figma's Glass has real refraction and dispersion; CSS has neither, so the
+   material is rebuilt in three masked layers:
+     fill    frost 14      -> a light 4px blur, not a heavy one
+             dispersion 93 -> strong saturate on the backdrop
+             refraction 41 -> a touch of brightness/contrast
+     ::before light -45 80% -> a 135deg sheen, brightest at the top-left
+     ::after  depth low     -> a thin rim, tinted through the brand hues to
+                               stand in for chromatic dispersion
+   -------------------------------------------------------------------------- */
+.truth__pattern{
+  --tile:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='188' height='188'%3E%3Crect x='10' y='10' width='150' height='150' rx='30' fill='%23fff'/%3E%3C/svg%3E");
+  --tile-rim:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='188' height='188'%3E%3Crect x='11.25' y='11.25' width='147.5' height='147.5' rx='29' fill='none' stroke='%23fff' stroke-width='2.5'/%3E%3C/svg%3E");
+
+  position:absolute;
+  inset-inline:0;
+  top:50%;
+  bottom:0;
+  z-index:1;
+  pointer-events:none;
+
+  background:color-mix(in srgb, var(--paper) 5%, transparent);
+  backdrop-filter:blur(4px) saturate(1.9) brightness(1.06) contrast(1.04);
+  -webkit-backdrop-filter:blur(4px) saturate(1.9) brightness(1.06) contrast(1.04);
+
+  -webkit-mask-image:var(--tile);
+  mask-image:var(--tile);
+  -webkit-mask-repeat:repeat;
+  mask-repeat:repeat;
+  -webkit-mask-position:right top;
+  mask-position:right top;
+}
+/* Light: -45deg at 80% */
+.truth__pattern::before,
+.truth__pattern::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  -webkit-mask-repeat:repeat;
+  mask-repeat:repeat;
+  -webkit-mask-position:right top;
+  mask-position:right top;
+}
+.truth__pattern::before{
+  background:linear-gradient(135deg,
+    color-mix(in srgb, var(--white) 26%, transparent) 0%,
+    color-mix(in srgb, var(--white) 6%, transparent) 38%,
+    transparent 62%);
+  -webkit-mask-image:var(--tile);
+  mask-image:var(--tile);
+}
+/* Dispersion: a rim that shifts hue across the brand range */
+.truth__pattern::after{
+  background:linear-gradient(135deg,
+    color-mix(in srgb, var(--white) 62%, transparent) 0%,
+    color-mix(in srgb, var(--green) 34%, transparent) 42%,
+    color-mix(in srgb, var(--lime) 26%, transparent) 62%,
+    color-mix(in srgb, var(--blue) 30%, transparent) 100%);
+  -webkit-mask-image:var(--tile-rim);
+  mask-image:var(--tile-rim);
+  opacity:.5;
+}
+
+.truth__glow{
+  position:absolute;
+  z-index:0;
+  width:min(58vw, 620px);
+  aspect-ratio:1;
+  border-radius:50%;
+  pointer-events:none;
+  background-size:160px 160px, 100% 100%;
+  background-blend-mode:overlay, normal;
+  -webkit-mask-image:var(--blob-falloff);
+  mask-image:var(--blob-falloff);
+  filter:blur(18px);
+  will-change:translate;
+}
+.truth__glow--l{
+  top:6%;
+  left:-14%;
+  background-image:var(--noise),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--blue-deep) 58%, var(--paper)),
+      color-mix(in srgb, var(--blue-deep) 26%, var(--paper)));
+  opacity:.34;
+  animation:truth-drift-l 30s ease-in-out infinite alternate;
+}
+/* The right-hand light is the brand gradient itself, navy through to lime. */
+.truth__glow--r{
+  top:-6%;
+  right:-10%;
+  background-image:var(--noise), var(--grad-brand);
+  opacity:.52;
+  animation:truth-drift-r 36s ease-in-out infinite alternate;
+}
+/* Same idea as the hero: they travel inward and meet, on mismatched clocks. */
+@keyframes truth-drift-l{
+  from{ translate:0 0;       scale:1; }
+  to  { translate:24vw 16vh; scale:1.1; }
+}
+@keyframes truth-drift-r{
+  from{ translate:0 0;        scale:1; }
+  to  { translate:-22vw 20vh; scale:1.06; }
+}
+@media (prefers-reduced-motion: reduce){
+  .truth__glow--l,.truth__glow--r{animation:none}
+}
+
+.truth__head{position:relative;z-index:2}
+.truth__head > *{grid-column:1 / -1;text-align:center}
+@media (min-width: 900px){
+  .truth__head > *{grid-column:2 / span 10}
+}
+
+.truth__eyebrow{
+  font-weight:700;
+  font-size:var(--step--1);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--paper);
+}
+.truth__eyebrow span{color:var(--lime)}
+
+.truth__title{
+  margin-top:clamp(14px, 1.8vw, 24px);
+  font-size:clamp(32px, 5.2vw, 76px);
+  line-height:1.0;
+  letter-spacing:-.042em;
+  color:var(--paper);
+  text-wrap:balance;
+}
+
+/* --- controls ------------------------------------------------------------ */
+.deck{position:relative;z-index:2}
+.deck__controls{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin-top:clamp(30px, 4vw, 54px);
+}
+.deck__arrow{
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1.5px solid color-mix(in srgb, var(--paper) 42%, transparent);
+  color:var(--paper);
+  transition:background var(--fast) ease, border-color var(--fast) ease, transform var(--fast) var(--ease);
+}
+.deck__arrow:hover{background:color-mix(in srgb, var(--paper) 14%, transparent);transform:scale(1.08)}
+.deck__dots{display:flex;align-items:center;gap:13px}
+/* 10x10. Active is lime inside a white ring; the ring is a box-shadow so the
+   dot's footprint never changes and the row doesn't shift as it advances. */
+.deck__dot{
+  width:10px;
+  height:10px;
+  padding:0;
+  border-radius:50%;
+  background:color-mix(in srgb, var(--paper) 70%, transparent);
+  transition:background var(--fast) ease, box-shadow var(--fast) ease;
+}
+.deck__dot:hover{background:var(--paper)}
+.deck__dot[aria-current="true"]{
+  background:var(--lime);
+  box-shadow:0 0 0 2.5px var(--white);
+}
+.deck__arrow:focus-visible,.deck__dot:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+
+/* --- the deck ------------------------------------------------------------ */
+.deck__stage{
+  position:relative;
+  height:clamp(420px, 44vw, 560px);
+  margin-top:clamp(26px, 3.4vw, 44px);
+}
+.deck__card{
+  position:absolute;
+  left:50%;
+  top:0;
+  width:clamp(252px, 27vw, 404px);
+  min-height:clamp(360px, 38vw, 492px);
+  display:flex;
+  flex-direction:column;
+  padding:clamp(22px, 2.2vw, 32px);
+  border-radius:var(--radius-lg);
+  background:var(--white);
+  color:var(--navy);
+  box-shadow:0 30px 70px rgba(5, 22, 45, .42);
+  /* margin-left centres it; `translate` carries the fan so `transform` is
+     free for rotation and scale and the two never fight. */
+  margin-left:calc(clamp(252px, 27vw, 404px) / -2);
+  transition:translate var(--slow) var(--ease),
+             transform var(--slow) var(--ease),
+             top var(--slow) var(--ease),
+             opacity var(--slow) ease;
+}
+.deck__card[data-pos="0"]{
+  top:0;
+  translate:0 0;
+  transform:rotate(0) scale(1);
+  opacity:1;
+  z-index:3;
+}
+/* The fanned pair sit lower and further out, so the pile spills past the
+   section edge rather than hugging the front card. */
+.deck__card[data-pos="1"]{
+  top:63%;
+  translate:-93% 14%;
+  transform:rotate(-13deg) scale(.88);
+  opacity:.5;
+  z-index:2;
+}
+.deck__card[data-pos="2"]{
+  top:54%;
+  translate:94% 19%;
+  transform:rotate(11deg) scale(.82);
+  opacity:.34;
+  z-index:1;
+}
+.deck__card[data-pos="hidden"]{
+  top:60%;
+  translate:0 26%;
+  transform:scale(.76);
+  opacity:0;
+  z-index:0;
+}
+.deck__card:not([data-pos="0"]){pointer-events:none}
+
+.deck__label{
+  font-weight:700;
+  font-size:var(--step--1);
+  color:var(--blue);
+}
+/* Spec: Inter Bold 64.91 / 58 / -6.38px, black, left aligned.
+   Ratios: 58/64.91 = .894, -6.38/64.91 = -.098em — so the proportions hold
+   as the clamp scales the size down on narrow screens. */
+.deck__q{
+  margin-top:10px;
+  font-weight:700;
+  font-size:clamp(34px, 5.6vw, 78px);
+  line-height:.894;
+  letter-spacing:-.098em;
+  color:var(--black);
+  text-align:left;
+}
+.deck__body{
+  margin-top:auto;
+  padding-top:24px;
+  font-size:var(--step-0);
+  line-height:1.5;
+  color:var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .deck__card{transition:none}
+}
+
+/* ---------------------------------------------------------------------------
+   Section three — what it actually does
+   A fixed 714px window. The tiles are taller than the window and sit pushed
+   down, so only their heads show; hovering slides a tile back to 0 and the
+   whole card — body copy included — rises into view.
+   --------------------------------------------------------------------------- */
+.four{
+  --tile-h:    clamp(360px, 38vw, 430px);
+  /* Sized to the tallest head in the set. Every head must wrap to 3 lines or
+     fewer at every width — a 5-line head gets sliced by the section edge and
+     that card then reads as sitting differently from the other three. The fix
+     for a long head is shorter copy, not a deeper peek: the required depth
+     swings 206-288px as a head crosses a line boundary, so no single clamp
+     can track it. Long sentences belong in .tile__body. */
+  --tile-peek: clamp(196px, 20vw, 248px);
+
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  height:714px;
+  background:var(--paper);
+}
+
+/* The mark itself, masked so the colour is a token not a second asset.
+   Height is an exact multiple of the tile, so the field always ends on a
+   whole row instead of slicing a row of marks in half where the cards begin. */
+.four__pattern{
+  --mark-size:86px;
+  --mark-rows:5;
+
+  position:absolute;
+  inset-inline:0;
+  top:0;
+  height:calc(var(--mark-size) * var(--mark-rows));
+  z-index:0;
+  pointer-events:none;
+  background:color-mix(in srgb, var(--navy) 14%, transparent);
+  /* Inlined token, not a url() to the asset — see --mark-asterisk. A linked
+     SVG mask is blocked as cross-origin under file:// and paints nothing. */
+  -webkit-mask-image:var(--mark-asterisk);
+  mask-image:var(--mark-asterisk);
+  -webkit-mask-size:var(--mark-size) var(--mark-size);
+  mask-size:var(--mark-size) var(--mark-size);
+  -webkit-mask-repeat:repeat;
+  mask-repeat:repeat;
+}
+@media (max-width: 900px){
+  .four__pattern{--mark-size:66px;--mark-rows:4}
+}
+
+.four__welly{
+  position:absolute;
+  z-index:3;
+  /* far enough left that he laps the card's corner, not its copy */
+  left:clamp(-150px, -7.6vw, -108px);
+  bottom:0;
+  width:clamp(118px, 13vw, 182px);
+  height:auto;
+  pointer-events:none;
+  transition:translate .52s var(--ease), opacity .34s ease, rotate .52s var(--ease);
+}
+/* He stands in front of the first tile, so when a card rises he steps out of
+   the way rather than covering the copy it just revealed. */
+.four:has(.tile:hover) .four__welly,
+.four:has(.tile:focus-within) .four__welly{
+  translate:-104% 16%;
+  rotate:-7deg;
+  opacity:0;
+}
+@media (prefers-reduced-motion: reduce){
+  .four__welly{transition:none}
+}
+
+.four__head{position:relative;z-index:2;padding-top:clamp(44px, 5.4vw, 76px)}
+.four__head > *{grid-column:1 / -1;text-align:center}
+@media (min-width: 900px){
+  .four__head > *{grid-column:3 / span 8}
+}
+
+.four__eyebrow{
+  font-weight:700;
+  font-size:var(--step--1);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--lime-ink);
+}
+.four__eyebrow span{color:var(--navy)}
+
+.four__title{
+  margin-top:clamp(12px, 1.6vw, 20px);
+  font-size:clamp(30px, 4.3vw, 58px);
+  line-height:1.02;
+  letter-spacing:-.042em;
+  color:var(--navy);
+  text-wrap:balance;
+}
+
+/* --- the four tiles ------------------------------------------------------ */
+.four__rail{
+  position:absolute;
+  inset-inline:0;
+  bottom:0;
+  z-index:2;
+  align-items:end;
+}
+.tile{
+  grid-column:span 6;
+  display:flex;
+  flex-direction:column;
+  height:var(--tile-h);
+  padding:clamp(18px, 1.8vw, 26px);
+  border-radius:var(--radius-lg);
+  /* pushed down so only the head shows; hover brings it home */
+  translate:0 calc(var(--tile-h) - var(--tile-peek));
+  transition:translate var(--slow) var(--ease), box-shadow var(--slow) ease;
+}
+.tile:hover,
+.tile:focus-within{
+  translate:0 0;
+  box-shadow:0 -18px 44px rgba(12, 39, 70, .18);
+}
+@media (min-width: 900px){
+  .tile{grid-column:span 3}
+}
+
+.tile__label{
+  font-weight:700;
+  font-size:var(--step--1);
+}
+.tile__head{
+  margin-top:8px;
+  font-weight:700;
+  font-size:clamp(27px, 3.1vw, 44px);
+  line-height:.94;
+  letter-spacing:-.05em;
+}
+.tile__body{
+  margin-top:auto;
+  padding-top:18px;
+  font-size:var(--step-0);
+  line-height:1.45;
+}
+
+/* One colour pairing per tile; the accent is the second half of each line. */
+.tile--ink   { background:var(--black); }
+.tile--ink   .tile__label,
+.tile--ink   .tile__head   { color:var(--white); }
+.tile--ink   .tile__accent { color:var(--lime); }
+.tile--ink   .tile__body   { color:color-mix(in srgb, var(--white) 82%, transparent); }
+
+.tile--lime  { background:var(--lime); }
+.tile--lime  .tile__label,
+.tile--lime  .tile__head   { color:var(--navy); }
+.tile--lime  .tile__accent { color:var(--paper); }
+
+.tile--blue  { background:var(--navy); }
+.tile--blue  .tile__label  { color:var(--white); }
+.tile--blue  .tile__head   { color:var(--lime); }
+.tile--blue  .tile__body   { color:color-mix(in srgb, var(--white) 86%, transparent); }
+
+.tile--paper { background:var(--paper-2); border:1px solid var(--line); }
+.tile--paper .tile__label  { color:var(--navy); }
+.tile--paper .tile__head   { color:var(--black); }
+.tile--paper .tile__accent { color:var(--blue); }
+.tile--paper .tile__body   { color:var(--ink-soft); }
+
+@media (prefers-reduced-motion: reduce){
+  .tile{transition:none}
+}
+
+/* ---------------------------------------------------------------------------
+   Photo mosaic
+   Four columns of stacked tiles. Every tile declares its own aspect-ratio, so
+   nothing here has a fixed height: the column heights are a consequence of the
+   proportions and the whole block rescales with the viewport. The four columns
+   come out within 6% of each other, which is the slight raggedness the design
+   has. Welly appears twice as a cut-out, occupying a slot with no tile behind
+   him. Ratios are taken from the mockup at a 362px column.
+   --------------------------------------------------------------------------- */
+.mosaic{
+  --mo-gap: clamp(8px, .85vw, 12px);
+  position:relative;
+  isolation:isolate;
+  padding-block: clamp(40px, 6vw, 86px);
+  background:var(--paper);
+}
+
+.mosaic__inner{position:relative}
+
+.mosaic__grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:var(--mo-gap);
+  align-items:start;
+}
+.mosaic__col{
+  display:flex;
+  flex-direction:column;
+  gap:var(--mo-gap);
+}
+
+.mo{
+  position:relative;
+  margin:0;
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:color-mix(in srgb, var(--navy) 7%, var(--paper));
+}
+.mo > img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* The proportions, read off the mockup. */
+.mo--a{aspect-ratio:362/538}
+.mo--b{aspect-ratio:362/477}
+.mo--c{aspect-ratio:362/258}
+.mo--d{aspect-ratio:362/235}
+.mo--e{aspect-ratio:362/486}
+.mo--f{aspect-ratio:362/523}
+.mo--g{aspect-ratio:362/233}
+.mo--h{aspect-ratio:362/271}
+
+/* Cut-outs: no tile, no crop — he sits in the space. */
+.mo--welly{
+  overflow:visible;
+  border-radius:0;
+  background:none;
+  display:grid;
+  place-items:end center;
+}
+.mo--welly > img{
+  width:auto;
+  max-width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.mo--welly-head{aspect-ratio:362/532}
+.mo--welly-body{aspect-ratio:362/455}
+
+/* --- the line over the photos -------------------------------------------- */
+/* The type crosses a pale photo AND the cream gap between columns, where white
+   on cream is unreadable. A corner-anchored fade keeps it legible without
+   reading as a box over the artwork. */
+.mosaic__scrim{
+  position:absolute;
+  z-index:1;
+  pointer-events:none;
+  /* Full bleed: the whole section, margins and padding included. inset:0 on a
+     child of the section gives exactly the viewport width — no 100vw, which
+     counts the scrollbar and would force a horizontal scroll. */
+  inset:0;
+  /* One pass, weighted to the bottom-left. It never reaches zero, so the whole
+     section is veiled; it stays at or above ~60% behind the headline, which is
+     what keeps white type over a bright photo above 3:1. */
+  background:linear-gradient(to top right,
+               color-mix(in srgb, var(--navy-night) 84%, transparent)  0%,
+               color-mix(in srgb, var(--navy-night) 70%, transparent) 30%,
+               color-mix(in srgb, var(--navy-night) 52%, transparent) 58%,
+               color-mix(in srgb, var(--navy-night) 32%, transparent) 85%,
+               color-mix(in srgb, var(--navy-night) 28%, transparent) 100%);
+}
+
+.mosaic__title{
+  position:absolute;
+  z-index:2;
+  left:calc(var(--grid-margin) + clamp(16px, 2.2vw, 34px));
+  right:46%;
+  bottom:clamp(34px, 5.2vw, 78px);
+  font-size:clamp(30px, 5.2vw, 75px);
+  line-height:.92;
+  letter-spacing:-.042em;
+  color:var(--white);
+}
+
+/* --- reflow ---------------------------------------------------------------
+   The columns are self-contained, so narrowing is a column-count change and
+   nothing else. Below 900px the headline stops overlaying and sits beneath,
+   in ink on cream — at that size there is no longer a dark area wide enough
+   to carry white type. */
+@media (max-width: 900px){
+  .mosaic__grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .mosaic__scrim{display:none}
+  .mosaic__title{
+    position:static;
+    margin-top:clamp(26px, 5vw, 40px);
+    color:var(--ink);
+  }
+}
+/* Deliberately NOT one column at the smallest sizes. Column height scales with
+   column width, so 2-up stays ~930px tall at 375px while 1-up became 3,534px —
+   four screens of scrolling for a decorative block. */
+
+/* ---------------------------------------------------------------------------
+   Mosaic — the moment
+   Three layers, in order: the grid deals itself in tile by tile, the scrim and
+   headline arrive on top of it, and from then on the columns drift against
+   each other as you scroll.
+
+   `.is-group` is added by the observer, so every resting state below exists
+   ONLY once JS is live. With JS off the section is simply visible.
+   --------------------------------------------------------------------------- */
+
+/* --- 1. the deal-in ------------------------------------------------------ */
+/* Wipe upward from the bottom edge rather than a plain fade — the tile looks
+   like it is being placed. clip-path and opacity are both compositable. */
+.mosaic.is-group .mo{
+  opacity:0;
+  clip-path:inset(100% 0 0 0);
+  transition:opacity .62s ease, clip-path .72s var(--ease);
+  transition-delay:calc(var(--col-d, 0ms) + var(--row-d, 0ms));
+}
+.mosaic.is-group.is-in .mo{
+  opacity:1;
+  clip-path:inset(0 0 0 0);
+}
+
+/* Left to right, top to bottom. Longest path is 270 + 140 = 410ms, so the
+   whole grid has settled a little over a second after it starts. */
+.mosaic__col:nth-child(1){--col-d:0ms}
+.mosaic__col:nth-child(2){--col-d:90ms}
+.mosaic__col:nth-child(3){--col-d:180ms}
+.mosaic__col:nth-child(4){--col-d:270ms}
+.mosaic__col > .mo:nth-child(1){--row-d:0ms}
+.mosaic__col > .mo:nth-child(2){--row-d:70ms}
+.mosaic__col > .mo:nth-child(3){--row-d:140ms}
+
+/* Welly is a cut-out, so a clip wipe would slice him off mid-air. He scales
+   up instead, last, and then keeps breathing. */
+.mosaic.is-group .mo--welly{
+  clip-path:none;
+  transition:opacity .5s ease, scale .72s var(--ease);
+  scale:.86;
+}
+.mosaic.is-group.is-in .mo--welly{scale:1}
+.mo--welly > img{animation:welly-breathe 5.4s ease-in-out infinite alternate}
+@keyframes welly-breathe{
+  from{transform:translateY(0)}
+  to  {transform:translateY(-9px)}
+}
+
+/* --- 2. scrim and headline ----------------------------------------------- */
+/* The scrim leads the type. At no point is white sitting on a bare photo
+   waiting for its backing to arrive. */
+.mosaic.is-group .mosaic__scrim{
+  opacity:0;
+  transition:opacity .66s ease .28s;
+}
+.mosaic.is-group.is-in .mosaic__scrim{opacity:1}
+
+.mosaic__line{
+  display:block;
+  overflow:hidden;
+  /* the window would otherwise clip the descender in "your" */
+  padding-bottom:.1em;
+  margin-bottom:-.1em;
+}
+.mosaic.is-group .mosaic__line > span{
+  display:block;
+  translate:0 112%;
+  transition:translate .8s var(--ease);
+  transition-delay:calc(var(--line-d, 0ms) + 420ms);
+}
+.mosaic.is-group.is-in .mosaic__line > span{translate:0 0}
+.mosaic__line:nth-child(2){--line-d:130ms}
+
+/* --- 3. the drift --------------------------------------------------------- */
+/* Scroll-driven, so it runs on the compositor with no scroll listener and no
+   JS at all. Even columns travel about twice as far as odd ones, which is what
+   separates the four planes. Excursion is capped below the section's own
+   padding so a column can never poke out of the top or bottom. */
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion: no-preference){
+    .mosaic__col{
+      --d: clamp(8px, 1.1vw, 16px);
+      animation:mo-drift linear both;
+      animation-timeline:view();
+      animation-range:entry 0% exit 100%;
+      will-change:translate;
+    }
+    .mosaic__col:nth-child(even){--d: clamp(16px, 2.4vw, 34px)}
+  }
+}
+@keyframes mo-drift{
+  from{translate:0 var(--d)}
+  to  {translate:0 calc(var(--d) * -1)}
+}
+
+/* --- 4. hover ------------------------------------------------------------- */
+.mo:not(.mo--welly) > img{transition:transform .64s var(--ease)}
+.mo:not(.mo--welly):hover > img{transform:scale(1.045)}
+
+/* --- reduced motion: show the result, skip the performance ---------------- */
+@media (prefers-reduced-motion: reduce){
+  .mosaic.is-group .mo,
+  .mosaic.is-group .mosaic__scrim{opacity:1;clip-path:none;transition:none}
+  .mosaic.is-group .mo--welly{scale:1}
+  .mosaic.is-group .mosaic__line > span{translate:0 0;transition:none}
+  .mo--welly > img{animation:none}
+  .mo:not(.mo--welly):hover > img{transform:none}
+}

@@ -1,0 +1,109 @@
+/* ===========================================================================
+   Welly — design tokens.
+   The ONLY file that defines a colour. Nothing else in the project writes a
+   hex value or uses !important; everything reads from here. That rule is what
+   keeps a change like "make the lime warmer" a one-line edit.
+
+   Values are taken from the supplied brand assets, not guessed.
+   =========================================================================== */
+
+:root{
+  /* --- brand -------------------------------------------------------------
+     Taken from the supplied assets: welly-mark.svg is #1C406D, and blob.svg
+     carries the brand gradient navy -> blue -> green -> lime.               */
+  --paper:        #F2F4E8;   /* page ground, cream */
+  --paper-2:      #FBFCF4;   /* lifted cream, cards on cream */
+  --navy:         #1C406D;   /* the mark, and primary ink */
+  --navy-deep:    #204470;   /* gradient stop 1 */
+  --navy-night:   #002141;   /* the dark section ground */
+  --blue-deep:    #0D4B7A;   /* gradient stop 2 */
+  --green:        #56B25F;   /* gradient stop 3 */
+  --lime:         #C1DC23;   /* gradient stop 4 — THE action colour */
+  --blue:         #3B82D9;   /* the highlighted word, "create." */
+  --lime-ink:     #6B7A18;   /* lime AS TEXT on cream. Raw lime is 1.4:1
+                                there; this is 4.27:1. */
+  --green-ink:    #38783F;   /* green AS TEXT on cream. Raw green is 2.38:1;
+                                this is 4.81:1. */
+  --white:        #FFFFFF;
+  --black:        #000000;
+
+  /* Film grain, as in the exported blob. Used as an overlay layer so it
+     stays crisp — a blurred element would smear it away. */
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.62'/%3E%3C/svg%3E");
+
+  /* The brand mark as a tileable MASK. Inlined rather than linked because a
+     CSS-fetched SVG is treated as cross-origin under file://, so a url() to
+     the asset paints nothing when index.html is opened by double-clicking.
+     The fill is black only because a mask reads alpha — it is not a colour;
+     the visible colour still comes from a token on the element.
+     Shape copied verbatim from assets/img/welly-mark.svg. */
+  --mark-asterisk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M23.9775 12C25.6455 12 26.8759 13.5581 26.4893 15.1807L25.1533 20.7852L26.7363 17.9199C27.5154 16.5094 29.4289 16.2385 30.5684 17.3779C31.7196 18.5292 31.4293 20.4661 29.9912 21.2295L27.1514 22.7363L32.8535 21.458C34.467 21.0965 35.9999 22.324 36 23.9775C36 25.6455 34.4419 26.8759 32.8193 26.4893L26.9473 25.0898L30.0488 26.8584C31.4572 27.6613 31.7157 29.5842 30.5693 30.7305C29.4115 31.8883 27.4669 31.611 26.6787 30.1758L25.0957 27.2939L26.4629 32.8252C26.8618 34.4395 25.6395 36 23.9766 36C22.3284 35.9998 21.1102 34.4648 21.4834 32.8594L22.9307 26.6299L21.2002 29.9736C20.4549 31.4137 18.5246 31.7138 17.3779 30.5674C16.2435 29.4329 16.5226 27.5254 17.9346 26.7637L21.2979 24.9492L15.1748 26.4629C13.5605 26.8618 12 25.6395 12 23.9766C12.0002 22.3284 13.5352 21.1102 15.1406 21.4834L21.4365 22.9463L17.2451 20.6982C15.8077 19.9273 15.5214 17.9874 16.6748 16.834C17.8163 15.6929 19.7321 15.9596 20.5186 17.3691L22.9229 21.6797L21.458 15.1465C21.0965 13.533 22.324 12.0001 23.9775 12Z' fill='%23000'/%3E%3C/svg%3E");
+
+  /* Soft falloff as a mask rather than filter:blur, so the grain survives. */
+  --blob-falloff: radial-gradient(circle at 50% 50%,
+                    #000 0%, rgba(0,0,0,.92) 30%, rgba(0,0,0,.45) 56%, transparent 74%);
+
+  /* Horizontal run of the same stops, for gradient type. */
+  --grad-eyebrow: linear-gradient(90deg,
+                    var(--navy) 0%,
+                    var(--blue-deep) 26%,
+                    var(--green-ink) 58%,
+                    var(--lime-ink) 100%);
+
+  /* The brand gradient itself, so nothing re-declares those four stops. */
+  --grad-brand: linear-gradient(180deg,
+                  var(--navy-deep) 5%,
+                  var(--blue-deep) 25%,
+                  var(--green) 41%,
+                  var(--lime) 64%);
+
+  /* --- semantic roles --------------------------------------------------- */
+  --bg:           var(--paper);
+  --ink:          var(--navy);
+  --ink-soft:     rgba(28, 64, 109, .78);
+  --ink-faint:    rgba(28, 64, 109, .58);
+  --line:         rgba(28, 64, 109, .16);
+
+  --accent:       var(--lime);
+  --accent-ink:   var(--navy);   /* text that sits ON the accent */
+
+  /* --- type ------------------------------------------------------------- */
+  /* Headings are Inter Bold per the type spec, same family as body. */
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --step--1:  clamp(12px, .78rem, 13px);
+  --step-0:   clamp(14px, .95rem, 16px);
+  --step-1:   clamp(18px, 1.3vw, 21px);
+  --step-2:   clamp(24px, 2.2vw, 32px);
+  --step-3:   clamp(32px, 4vw, 54px);
+  --step-4:   clamp(38px, 5.4vw, 72px);   /* hero display: 72px cap */
+
+  /* --- space + shape ---------------------------------------------------- */
+  /* --- grid ---------------------------------------------------------------
+     12 columns, 64px margins, 24px gutters, stretch (per the Figma grid).
+     Margins collapse on small screens; the column count never changes, so a
+     span written once keeps its proportion at every width.                  */
+  --grid-cols:   12;
+  --grid-margin: clamp(20px, 4.6vw, 64px);
+  --grid-gutter: clamp(12px, 1.7vw, 24px);
+  --radius-sm: 10px;
+  --radius:    20px;
+  --radius-lg: 28px;
+  --pill:      999px;
+
+  --header-h:  clamp(60px, 7vh, 72px);
+
+  /* Photo strip: cards are exported at 288x384. */
+  --strip-card-w: clamp(182px, 19vw, 288px);
+  --strip-gap:    clamp(12px, 1.5vw, 22px);
+
+  /* --- motion ----------------------------------------------------------- */
+  --ease:      cubic-bezier(.2, .75, .2, 1);
+  --fast:      .18s;
+  --slow:      .42s;
+}
+
+@media (prefers-reduced-motion: reduce){
+  :root{ --fast: 0s; --slow: 0s; }
+}
